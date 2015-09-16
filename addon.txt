@@ -1,0 +1,11 @@
+"AddonInfo"
+{
+	"name"				"BigBrother"
+	"version"			"0.01"
+	"up_date"			"14/09/15"
+	"author_name"			"Michael Rooney"
+	"author_email"			"m.rooney93@gmail.com"
+	"author_url"			"mikeyrooney.com"
+	"info"				"Grief detection mod"
+	"override"			"0"
+}
