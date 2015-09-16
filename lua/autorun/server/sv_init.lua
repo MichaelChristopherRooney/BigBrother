@@ -53,7 +53,7 @@ function recordLocations()
 
 end
 
-
+-- need to rework this into a command to open a gui clientside
 function donateCommand( pl, text, teamonly )
             if (text == "!locations") then
                 for k, v in pairs(player.GetAll()) do v:ChatPrint( "Player " .. pl:Nick() .. " has donated to the server via !donate" )
