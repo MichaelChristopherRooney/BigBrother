@@ -8,21 +8,21 @@ authorised_users = {"admin", "superadmin"}
 --[[
 	values relating to how often data is recorded and what data is recorded
 ]]
-record_locations_frequency = 5 -- how often location should be record in seconds
+record_locations_frequency = 0.01 -- how often location updates should be recorded in seconds
 event_lifespan = 1800 -- how long events should be stored for in seconds (600 = 10 min, 1800 = 30 min, etc)
 
 events = {}
 
 
 -- initialise the addon
-function InitialiseBigBrother()
+function initialiseBigBrother()
 
 	if not verifyConfig() then return end
 	
 	timer.Create("record_locations_timer", record_locations_frequency, 0, recordLocations) 
 
 end
-hook.Add("Initialize", "InitialiseBB", InitialiseBigBrother )
+hook.Add("Initialize", "InitialiseBB", initialiseBigBrother)
 
 
 -- ensure all config values are well formed
@@ -47,7 +47,7 @@ function verifyConfig()
 	print("BigBrother log: Authorisation type is " .. authorisation_type)
 	print("BigBrother log: Authorised users are: ")
 	
-	for k, v in pairs( authorised_users ) do
+	for k, v in pairs(authorised_users) do
 		print(k, v)
 	end
 	
@@ -65,7 +65,9 @@ function recordLocations()
 	for i = 1, #plys, 1 do
 	
 		local temp_table = {}
-		temp_table.player_steam_id = plys[i]:SteamID()
+		temp_table.steam_id = plys[i]:SteamID()
+		temp_table.name = plys[i]:Name()
+		temp_table.nick = plys[i]:Nick()
 		temp_table.event_type = "location_update"
 		temp_table.timestamp = os.time()
 		temp_table.position = plys[i]:GetPos()
@@ -77,16 +79,34 @@ function recordLocations()
 end
 
 
--- need to rework this into a command to open a gui clientside
-function display_events( pl, text, teamonly )
-
-	if (text == "!locations") then
+-- record a PlayerSpawnProp event_lifespan
+function playerSpawnedPropBB(ply, model, entity)
 	
-		for k, v in pairs(events[1]) do
-			print(k, v)
-		end
+	local temp_table = {}
+	temp_table.steam_id = ply:SteamID()
+	temp_table.name = ply:Name()
+	temp_table.nick = ply:Nick()
+	temp_table.event_type = "spawned_prop"
+	temp_table.timestamp = os.time()
+	temp_table.position = ply:GetPos()
+	temp_table.model = model
+		
+	table.insert(events, temp_table)
+	
+end
+hook.Add("PlayerSpawnedProp", "PlayerSpawnedPropBB", playerSpawnedPropBB)
+
+
+-- need to rework this into a command to open a gui clientside
+function displayEvents(pl, text, teamonly)
+
+	if (text == "!events") then
+	
+		local count = 0
+		for _ in pairs(events) do count = count + 1 end
+		print(count)
 
 	end
 	
 end
-hook.Add( "PlayerSay", "Chat", display_events )
+hook.Add("PlayerSay", "Chat", displayEvents)
