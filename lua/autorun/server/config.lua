@@ -8,7 +8,7 @@ authorised_ranks = {"admin", "superadmin"}
 authorised_steam_ids = {}
 
 record_locations_frequency = 5 -- how often location updates should be recorded in seconds
-event_lifespawn = 1800 -- how long events should be stored for in seconds (600 = 10 min, 1800 = 30 min, etc)
+event_lifespan = 1800 -- how long events should be stored for in seconds (600 = 10 min, 1800 = 30 min, etc)
 delete_events_frequency = 5 -- how often the addon should check for old events to delete in seconds
 
 -- what events should be recorded
