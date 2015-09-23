@@ -23,29 +23,17 @@ function recordLocations()
 	
 	for i = 1, #plys, 1 do
 	
-		steam_id = plys[i]:SteamID()
-		
-		if not player_list[steam_id] then
-			player_list[steam_id] = {}
-		end
-		
-		if not player_list[steam_id]["location_update"] then
-			player_list[steam_id]["location_update"]  = {}
-		end
-		
 		local temp_table = {}
 		temp_table.name = plys[i]:Name()
 		temp_table.nick = plys[i]:Nick()
 		temp_table.timestamp = os.time()
 		temp_table.position = plys[i]:GetPos()
 		
-		table.insert(player_list[steam_id]["location_update"], temp_table)
+		insertIntoEventList(plys[i]:SteamID(), "location_update", temp_table)
 		
-		for k, v in pairs(player_list[steam_id]["location_update"][1]) do
-			print(k, v)
-		end
+		print("LOG: location_update")
 		
-    end
+	end
 
 end
 
@@ -53,25 +41,33 @@ end
 -- record a spawned_prop event
 function playerSpawnedPropBB(ply, model, entity)
 
-	--[[	
 	local temp_table = {}
-	temp_table.steam_id = ply:SteamID()
 	temp_table.name = ply:Name()
 	temp_table.nick = ply:Nick()
-	temp_table.event_type = "spawned_prop"
 	temp_table.timestamp = os.time()
 	temp_table.position = ply:GetPos()
 	temp_table.model = model
-		
-	table.insert(player_list, temp_table)
-	]]
+	
+	insertIntoEventList(ply:SteamID(), "spawned_prop", temp_table)
+	
 	print("LOG: spawned_prop")
 	
 end
 
 
 function playerSpawnedSentBB(ply, ent)
+
+	local temp_table = {}
+	temp_table.name = ply:Name()
+	temp_table.nick = ply:Nick()
+	temp_table.timestamp = os.time()
+	temp_table.position = ply:GetPos()
+	temp_table.ent_name = ent:GetName()
+	
+	insertIntoEventList(ply:SteamID(), "spawned_sent", temp_table)
+	
 	print("LOG: Player spawned SENT")
+	
 end
 
 
@@ -81,46 +77,130 @@ end
 
 
 function playerWasKilledBB(victim, inflictor, attacker)
+
 	if(victim ~= attacker) then
+	
+		local temp_table = {}
+		temp_table.name = victim:Name()
+		temp_table.nick = victim:Nick()
+		temp_table.timestamp = os.time()
+		temp_table.position = victim:GetPos()
+		temp_table.weapon = inflictor:GetName()
+		temp_table.attacker_steam_id = attacker:SteamID()
+		temp_table.attacker_name = attacker:Name()
+		temp_table.attacker_nick = attacker:Nick()
+		temp_table.attacker_position = attacker:GetPos()
+	
+		insertIntoEventList(victim:SteamID(), "was_killed", temp_table)
+	
 		print("LOG: Player was killed")
+		
 	end
+	
 end
 
 
 function playerSuicideBB(victim, inflictor, attacker)
+
 	if(victim == attacker) then
+	
+		local temp_table = {}
+		temp_table.name = ply:Name()
+		temp_table.nick = ply:Nick()
+		temp_table.timestamp = os.time()
+		temp_table.position = ply:GetPos()
+	
+		insertIntoEventList(victim:SteamID(), "suicide", temp_table)
+		
 		print("LOG: Player suicided")
+		
 	end
+	
 end
 
 
 function playerKilledPlayerBB(victim, inflictor, attacker)
+
 	if(victim ~= attacker) then
+	
+		local temp_table = {}
+		temp_table.name = attacker:Name()
+		temp_table.nick = attacker:Nick()
+		temp_table.timestamp = os.time()
+		temp_table.position = attacker:GetPos()
+		temp_table.weapon = inflictor:GetName()
+		temp_table.victim_steam_id = victim:SteamID()
+		temp_table.victim_name = victim:Name()
+		temp_table.victim_nick = victim:Nick()
+		temp_table.victim_position = victim:GetPos()
+	
+		insertIntoEventList(attacker:SteamID(), "killed_player", temp_table)
+		
 		print("LOG: Player killed another player")
+		
 	end
-end
-
-
-function playerConnectedBB(name, ip)
-	print("LOG: Player connected")
+	
 end
 
 
 function playerDisconnectedBB(ply)
+
+	local temp_table = {}
+	temp_table.name = ply:Name()
+	temp_table.nick = ply:Nick()
+	temp_table.timestamp = os.time()
+	temp_table.position = ply:GetPos()
+	
+	insertIntoEventList(ply:SteamID(), "disconnected", temp_table)
+	
 	print("LOG: Player disconnected")
+	
 end
 
 
 function sayBB(sender, text, teamChat)
+
+	local temp_table = {}
+	temp_table.name = ply:Name()
+	temp_table.nick = ply:Nick()
+	temp_table.timestamp = os.time()
+	temp_table.position = ply:GetPos()
+	temp_table.text = text
+	
+	insertIntoEventList(ply:SteamID(), "say", temp_table)
+	
 	print("LOG: Player said something")
+	
 end
 
 
-function playerChangedTeamOrJobBB(ply, team)
+function playerChangedTeamOrJobBB(ply, old_team, new_team)
+
+	local temp_table = {}
+	temp_table.name = ply:Name()
+	temp_table.nick = ply:Nick()
+	temp_table.timestamp = os.time()
+	temp_table.position = ply:GetPos()
+	temp_table.old_team = team.GetName(old_team)
+	temp_table.new_team = team.GetName(new_team)
+	
+	insertIntoEventList(ply:SteamID(), "changed_team_or_job", temp_table)
+	
 	print("LOG: Player changed team or job")
+	
 end
 
 
 function spawnedBB(ply)
+
+	local temp_table = {}
+	temp_table.name = ply:Name()
+	temp_table.nick = ply:Nick()
+	temp_table.timestamp = os.time()
+	temp_table.position = ply:GetPos()
+	
+	insertIntoEventList(ply:SteamID(), "spawned", temp_table)
+	
 	print("LOG: Player spawned")
+	
 end

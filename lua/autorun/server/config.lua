@@ -14,13 +14,13 @@ delete_events_frequency = 5 -- how often the addon should check for old events t
 -- what events should be recorded
 -- change True to False if you do not want that event to be recorded
 events_to_record = {
+	["location_update"] = True,	-- where the player was at a given time
 	["spawned_prop"] = True,	-- the player spawned a prop
 	["spawned_sent"] = True,	-- the player spawned a scripted entity
 	["spawned_swep"] = True,	-- the player spawned a scripted weapon
 	["was_killed"] = True,		-- the player was killed_player
 	["suicide"] = True,		-- the player committed suicide
 	["killed_player"] = True,	-- the player killed another player
-	["connected"] = True,		-- the player connected to the game
 	["disconnected"] = True,	-- the player disconnected from the game
 	["say"] = True,			-- the player said something in chat
 	["changed_team_or_job"] = True,	-- the player changed their team or job

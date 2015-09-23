@@ -2,6 +2,7 @@
 
 include("config.lua")
 include("record_functions.lua")
+include("event_functions.lua")
 
 player_list = {}
 
@@ -76,10 +77,6 @@ function createHooks()
 		hook.Add("PlayerDeath", "playerKilledPlayerBB", playerKilledPlayerBB)
 	end
 	
-	if events_to_record["connected"] == True then
-		hook.Add("PlayerConnect", "playerConnectedBB", playerConnectedBB)
-	end
-	
 	if events_to_record["disconnected"] == True then
 		hook.Add("PlayerDisconnected", "playerDisconnectedBB", playerDisconnectedBB)
 	end
@@ -89,7 +86,7 @@ function createHooks()
 	end
 	
 	if events_to_record["changed_team_or_job"] == True then
-		hook.Add("PlayerJoinTeam", "playerChangedTeamOrJobBB", playerChangedTeamOrJobBB)
+		hook.Add("OnPlayerChangedTeam", "playerChangedTeamOrJobBB", playerChangedTeamOrJobBB)
 	end
 	
 	if events_to_record["spawned"] == True then
