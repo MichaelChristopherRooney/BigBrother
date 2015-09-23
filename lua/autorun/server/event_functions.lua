@@ -9,7 +9,7 @@ function insertIntoEventList(steam_id, event_type, event)
 
 	if not player_list[steam_id] then
 		player_list[steam_id] = {}
-		player_list[steam_id].steam_id = steam_id()
+		player_list[steam_id].steam_id = steam_id
 	end
 		
 	if not player_list[steam_id][event_type] then

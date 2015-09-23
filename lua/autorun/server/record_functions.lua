@@ -1,4 +1,4 @@
--- this file contains functions that record events
+-- this file contains functions that record various events
 
 
 -- need to rework this into a command to open a gui clientside
@@ -38,7 +38,6 @@ function recordLocations()
 end
 
 
--- record a spawned_prop event
 function playerSpawnedPropBB(ply, model, entity)
 
 	local temp_table = {}

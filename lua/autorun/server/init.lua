@@ -10,11 +10,16 @@ player_list = {}
 -- initialise the addon
 function initialiseBigBrother()
 
-	if not verifyConfig() then return end
+	if not verifyConfig() then return end -- if config values are not well-formed
+	
+	printConfigInfo()
 	
 	createHooks()
 	
-	timer.Create("record_locations_timer", record_locations_frequency, 0, recordLocations) 
+	if events_to_record["location_update"] then
+		timer.Create("record_locations_timer", record_locations_frequency, 0, recordLocations)
+	end
+	
 	timer.Create("delete_events_timer", delete_events_frequency, 0, deleteEvents)
 
 end
@@ -24,30 +29,52 @@ hook.Add("Initialize", "InitialiseBB", initialiseBigBrother)
 -- ensure all config values are well formed
 function verifyConfig()
 	
+	if not verify_config then
+		-- addon has been told not to verify the config file
+		-- need to return true or the addon will not start
+		return true
+	end
+	
 	if type(record_locations_frequency) ~= "number" then
-		print("*** BigBrother error: record_locations_frequency must be a number ***")
+		print("BigBrother error: record_locations_frequency must be a number")
 		return false
 	end
 	
 	if type(event_lifespan) ~= "number" then
-		print("*** BigBrother error: event_lifespan must be a number ***")
+		print("BigBrother error: event_lifespan must be a number")
 		return false
-	end
-	
-	print("BigBrother log: Initialization ok")
-	print("BigBrother log: Authorised users are: ")
-	
-	for k, v in pairs(authorised_ranks) do
-		print(k, v)
-	end
-	
-	for k, v in pairs(authorised_steam_ids) do
-		print(k, v)
 	end
 	
 	return true
 
 end
+
+
+function printConfigInfo()
+
+	if not print_config_info then 
+		return -- addon has been told not to print config info
+	end 
+	
+	print("BigBrother log: Initialization ok")
+	print("BigBrother log: Authorised ranks and Steam IDs are: ")
+	
+	for k, v in pairs(authorised_ranks) do
+		print("Bigbrother log:" .. k, v)
+	end
+	
+	for k, v in pairs(authorised_steam_ids) do
+		print("Bigbrother log:" .. k, v)
+	end
+	
+	print("Bigbrother: The following events will be recorded")
+	
+	for k, v in pairs(events_to_record)
+		print("Bigbrother log:" .. k)
+	end
+	
+end
+
 
 function createHooks()
 	
